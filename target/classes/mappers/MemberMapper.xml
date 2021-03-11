@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncs.MemberMapper">
+
+	<!-- PageList -->
+	<select id="totalRowCount" resultType="int">
+		select count(*) from membertest
+	</select>
+	<select id="pageList" resultType="vo.MemberVO">
+		select id,password,name,lev,birthd,point,weight,rid,uploadfile,rnum
+		from (select m.* , ROW_NUMBER() OVER(order by id asc) rnum from membertest m )
+		where rnum between #{sno} and #{eno}
+	</select>
+
+	<!-- checkSelectList
+		 => select * from board where id in ('banana','apple','green') order by root desc, step asc
+		 => collection : list 또는 array Type 의 매개변수 (vo에 정의된 변수 사용)
+		 item : collection 의 데이터 를 1건씩 전달 받으며 위의 구문을 완성함.
+		 index : 필요시 사용, 0 부터 시작 (0,1,2...) 
+		 
+		 <foreach ...index="index"..> 
+		 	...... "${index}" : index 값 사용하기
+		 			사용하지 않는경우 아래처럼 표시해도 되고, 생략해도됨.
+		 <foreach .... index="" open="(" close=")" separator=","> 
+	-->
+	<!-- select * from member where lev=? or lev=? or.....order by id (비추)
+		 select * from member where lev in('A','B','C') order by id (선택) -->
+	
+	<select id="checkselectList" resultType="vo.MemberVO">
+		SELECT * FROM MEMBERTEST WHERE LEV IN
+		<foreach collection="check" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		ORDER BY ID
+	</select>
+
+	<select id="selectList" resultType="vo.MemberVO">
+		SELECT * FROM MEMBERTEST
+		ORDER BY ID
+	</select>
+
+	<select id="selectOne" resultType="vo.MemberVO">
+		SELECT * FROM MEMBERTEST WHERE
+		ID=#{id}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO MEMBERTEST VALUES(
+		#{id},#{password},#{name},#{lev},#{birthd},
+		#{point},#{weight},#{rid},#{uploadfile})
+	</insert>
+
+	<update id="update">
+		UPDATE MEMBERTEST SET PASSWORD=#{password},
+		NAME=#{name}, LEV=#{lev},
+		BIRTHD=#{birthd}, POINT=#{point},
+		WEIGHT=#{weight},
+		RID=#{rid}, UPLOADFILE=#{uploadfile} WHERE ID=#{id}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM MEMBERTEST WHERE ID=#{id}
+	</delete>
+
+</mapper>

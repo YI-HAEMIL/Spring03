@@ -1,0 +1,52 @@
+body {
+	background-color: white;
+	text-align:center;
+	margin:0 auto;	
+}
+table{margin:0 auto;}
+
+/* axTest03.js -> board jsonView Test */
+.content { color : blue; }
+#content {
+	display: none;
+	width : 300px;
+	height : 70px;
+	background: MintCream;
+	z-index: 100;
+	position: absolute;
+}
+
+/* inputTag ErrorMessage */
+.message {
+	color: red;
+	font-style: italic;
+	font-size: x-small;
+}
+
+/*  span Tag Menu */
+.textLink {
+	color: gray;
+}
+/*  Check  List searchBar */
+#searchBar {
+	color:DimGray ; font-family:돋움; font-size:16px;
+	margin:0 auto; text-align: center;
+}
+
+
+/* Link Button */
+.button {
+	width:150px; height:70px; background-color:aqua;
+	border-radius:20px; border:5px solid lightGray;  
+	text-align: center;
+	}
+a {color:gray; text-decoration:none; }
+a:hover {color:#b37769; font-weight: bold;}
+.button > a {line-height:70px}
+.button:hover {	
+	box-shadow: 5px 5px 5px #A9A9A9
+	/* 그림자	=> box, Text 
+            => 오른쪽(h 수평거리: +우측/-좌측),
+               아래(v 수직거리: +아래쪽/-위쪽), 
+               흐림도(blur), 색상 */	
+	}
