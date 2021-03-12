@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import criTest.Criteria;
+import criTest.PageMaker;
 import service.BoardService;
 import vo.BoardVO;
 import vo.PageVO;
@@ -19,6 +21,22 @@ import vo.PageVO;
 public class BoardController {
 	@Autowired
 	BoardService service;
+
+// ** Criteria PageList ver01
+	@RequestMapping(value="/cbpage")
+	public ModelAndView cbpage(ModelAndView mv, Criteria cri, PageMaker pageMaker) {
+		// 1) currPage 이용해서 sno, eno 계산
+		cri.setSnoEno();
+		// 2) Service 처리
+		mv.addObject("Banana", service.criList(cri));
+		// 3) PageMaker처리
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRow(service.totalRowCount());
+		
+		mv.addObject("pageMaker", pageMaker);
+		mv.setViewName("board/criBList");
+		return mv;
+	} //cbpage
 
 // ** PageList 1.
 	@RequestMapping(value="/bpage")

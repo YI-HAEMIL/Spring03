@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import criTest.Criteria;
 import vo.BoardVO;
 import vo.PageVO;
 
@@ -16,6 +17,11 @@ public class BoardDAO {
 	private SqlSession sqlSession;
 	// SqlSession (Interface) -> SqlSessionTemplate (servl...xml 에 Bean 등록)
 	private static final String NS = "com.ncs.BoardMapper.";
+	
+// ** Criteria PageList
+	public List<BoardVO> criList(Criteria cri) {
+		return sqlSession.selectList(NS+"pageList", cri);
+	}
 	
 // ** Page BoardList
 	public int totalRowCount() {

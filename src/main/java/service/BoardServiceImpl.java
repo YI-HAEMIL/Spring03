@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import criTest.Criteria;
 import util.BoardDAO;
 import vo.BoardVO;
 import vo.PageVO;
@@ -13,6 +14,14 @@ import vo.PageVO;
 public class BoardServiceImpl implements BoardService {
 	@Autowired
 	BoardDAO dao;
+	
+	// ** Criteria PageList
+	public int totalRowCount() {
+		return dao.totalRowCount();
+	}
+	public List<BoardVO> criList(Criteria cri) {
+		return dao.criList(cri);
+	}
 	
 	// ** Page BoardList
 	// => totalRowCount set, 출력할 board row set 
