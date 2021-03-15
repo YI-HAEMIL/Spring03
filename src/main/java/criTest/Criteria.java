@@ -11,6 +11,7 @@ public class Criteria {
 	
 	// 기본값 생성자로 초기화
 	public Criteria() {
+		//최초 게시판에 진입할 때를 위해서 기본 값을 설정 해야 한다.
 		this.currPage=1;
 		this.rowPerPage=5;
 	} //생성자
@@ -21,6 +22,7 @@ public class Criteria {
 			this.currPage = currPage;
 		} else this.currPage=1;
 	}
+	
 	// 2) 1페이지당 보여줄 Row(Record, 튜플) 갯수 확인
 	// 제한조건 점검(50개까지만 허용)
 	public void setRowPerPage(int rowPerPage) {

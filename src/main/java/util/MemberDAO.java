@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import criTest.Criteria;
+import criTest.SearchCriteria;
 import vo.MemberVO;
 import vo.PageVO;
 
@@ -24,6 +26,21 @@ public class MemberDAO {
 	// SqlSession 객체를 return 받을 수 있게됨.
 	
 	private static final String NS ="com.ncs.MemberMapper.";
+	
+// ** Search Criteria PageList
+	public int searchRowCount(SearchCriteria cri) {
+		return sqlSession.selectOne(NS+"searchRowCount", cri);
+	}
+	public List<MemberVO> searchMList(SearchCriteria cri) {
+		return sqlSession.selectList(NS+"searchMList",cri);
+	}
+	
+// ** Criteria PageList
+	public List<MemberVO> criMList(Criteria cri)  {
+		return sqlSession.selectList(NS+"pageList", cri);
+	}
+	
+	
 
 // ** Page MemberList
 	public int totalRowCount() {

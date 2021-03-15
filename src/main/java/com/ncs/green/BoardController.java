@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import criTest.Criteria;
 import criTest.PageMaker;
+import criTest.SearchCriteria;
 import service.BoardService;
 import vo.BoardVO;
 import vo.PageVO;
@@ -22,16 +22,27 @@ public class BoardController {
 	@Autowired
 	BoardService service;
 
-// ** Criteria PageList ver01
+// ** Criteria PageList ver01 _ ver02
 	@RequestMapping(value="/cbpage")
-	public ModelAndView cbpage(ModelAndView mv, Criteria cri, PageMaker pageMaker) {
+	public ModelAndView cbpage(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		// SearchType이 '---'  면 keyword 클리어 => jsp에서 jQuery로 하는 게 더 좋은 방법
+		// if("n".equals(cri.getSearchType())) cri.setKeyword("");
+		
 		// 1) currPage 이용해서 sno, eno 계산
 		cri.setSnoEno();
+		
 		// 2) Service 처리
-		mv.addObject("Banana", service.criList(cri));
+		// ** ver01
+		// mv.addObject("Banana", service.criBList(cri));
+		
+		// ** ver02: 검색조건(searchType, keyword)에 따른 검색
+		// => 새로운 service 추가 : searchList(cri)
+		mv.addObject("Banana", service.searchBList(cri));
+		
 		// 3) PageMaker처리
 		pageMaker.setCri(cri);
-		pageMaker.setTotalRow(service.totalRowCount());
+//		pageMaker.setTotalRow(service.totalRowCount());		// ver01
+		pageMaker.setTotalRow(service.searchRowCount(cri));	// ver02
 		
 		mv.addObject("pageMaker", pageMaker);
 		mv.setViewName("board/criBList");

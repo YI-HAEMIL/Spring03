@@ -3,13 +3,83 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ncs.BoardMapper">
 
+	<!-- SQL 쿼리문에서 비교연산자 사용하는 경우  
+		 XML에서는  <,>등 비교연산자의 경우 XML규칙상 에러 나기때문에,
+		 이기호를 연산자로 인식하도록 하기 위해서는 SQL문을 CDATA로 묶어 주어야 한다.
+		 <![CDATA[ SELECT * FROM table WHERE id > 1 ]]> -->
+
+	<!-- SearchCriteria PageList  
+		 => searchType 별 검색 조건문 만들기
+		 => Sql , include 태그 : 반복되는 쿼리 묶기
+	
+		 => title Like '%#{keyword}%' 
+		 => '%' + #{keyword} + '%'
+		 => CONCAT(i1,i2) , ||
+		 => CONCAT : 두개의 문자열 합침 
+					 3개의 문자열을 합치려면 아래처럼 함수를 함수로 감싸줘야 한다. 
+					 ( MySql은 3개 가능 )
+		
+		=> 만약 keyword를 선탟하지 않은 경우라면,
+		   select id from board where id like '%%' ;
+		   -> 무조건(전체검색)과 동일			 
+	 --> 
+
+	<sql id = "search">
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="searchType=='t'.toString()">
+				and title LIKE #{keyVal} )
+				<!-- and title LIKE CONCAT('%', CONCAT(#{keyword}, '%')) -->
+			</when>
+			<when test="searchType=='c'.toString()">
+				and content LIKE #{keyVal} )
+			</when>
+			<when test="searchType=='w'.toString()">
+				and	id		LIKE '%' || #{keyword} || '%')
+			</when>
+			<when test="searchType=='tc'.toString()">
+				and title	LIKE '%' || #{keyword} || '%'
+				or	content LIKE '%' || #{keyword} || '%')
+			</when>
+			<when test="searchType=='cw'.toString()">
+				and	content LIKE '%' || #{keyword} || '%'
+				or	id		LIKE '%' || #{keyword} || '%')
+			</when>
+			<when test="searchType=='tcw'.toString()">
+				and title	LIKE '%' || #{keyword} || '%'
+				or	content LIKE '%' || #{keyword} || '%'
+				or	id		LIKE '%' || #{keyword} || '%')
+			</when>
+			<otherwise>)</otherwise>
+		</choose>
+	</sql>
+
+	<select id="searchRowCount" resultType="int">
+	<![CDATA[
+		select count(*) from board where ( seq > 0 ]]>
+		<!-- 조건 id :  search -->
+		<include refid="search"></include>
+	</select>
+	<select id="searchBList" resultType="vo.BoardVO">
+		<![CDATA[
+		select seq,title,id,regdate,cnt,root,step,indent,rnum from 
+		(select b.* , ROW_NUMBER() OVER(order by root desc, step asc) rnum from board b 
+		where seq > 0 ]]> 
+		<include refid="search"></include> 
+		where rnum between #{sno} and #{eno}
+	</select>
+	
+	
+
 	<!-- PageList -->
 	<select id="totalRowCount" resultType="int">
 		select count(*) from board
 	</select>
 	<select id="pageList" resultType="vo.BoardVO">
-		select seq,title,id,regdate,cnt,root,step,indent,rnum
-		from (select b.* , ROW_NUMBER() OVER(order by root desc, step asc) rnum from board b )
+		select seq,title,id,regdate,cnt,root,step,indent,rnum from 
+		(select b.* , ROW_NUMBER() OVER(order by root desc, step asc) rnum from board b )
 		where rnum between #{sno} and #{eno}
 	</select>
 	

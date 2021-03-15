@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import criTest.PageMaker;
+import criTest.SearchCriteria;
 import service.MemberService;
 import vo.MemberVO;
 import vo.PageVO;
@@ -26,6 +28,26 @@ import vo.PageVO;
 public class MemberController {
 	@Autowired
 	MemberService service;
+	
+// ** Criteria PageList ver01_ver02
+	@RequestMapping(value="/cmpage")
+	public ModelAndView cmpage(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		
+		// 1) currPage 이용해서 sno, eno 계산
+		cri.setSnoEno();
+		
+		// 2) Service 처리
+		mv.addObject("Banana", service.searchMList(cri));
+		
+		// 3) PageMaker처리
+		pageMaker.setCri(cri);
+//		pageMaker.setTotalRow(service.totalRowCount());		// ver01
+		pageMaker.setTotalRow(service.searchRowCount(cri));	// ver02
+		
+		mv.addObject("pageMaker", pageMaker);
+		mv.setViewName("member/criMList");
+		return mv;
+	} //cmpage
 	
 // ** PageList 1.
 	@RequestMapping(value = "/mpage")

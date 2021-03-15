@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import criTest.Criteria;
+import criTest.SearchCriteria;
 import vo.BoardVO;
 import vo.PageVO;
 
@@ -18,8 +19,17 @@ public class BoardDAO {
 	// SqlSession (Interface) -> SqlSessionTemplate (servl...xml 에 Bean 등록)
 	private static final String NS = "com.ncs.BoardMapper.";
 	
-// ** Criteria PageList
-	public List<BoardVO> criList(Criteria cri) {
+// ** Search Criteria PageList
+	public int searchRowCount(SearchCriteria cri) {
+		return sqlSession.selectOne(NS+"searchRowCount", cri);
+	}
+	public List<BoardVO> searchBList(SearchCriteria cri) {
+		return sqlSession.selectList(NS+"searchBList", cri);
+	}
+	
+	
+// ** Criteria PageList ver01
+	public List<BoardVO> criBList(Criteria cri) {
 		return sqlSession.selectList(NS+"pageList", cri);
 	}
 	

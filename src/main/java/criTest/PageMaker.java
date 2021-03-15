@@ -14,10 +14,12 @@ public class PageMaker {
 	private int lastPageNo;
 	// 출력 가능한 마지막 PageNo (totalRow, rowPerPage로 계산)
 
-	private Criteria cri;
+	// private Criteria cri; // ver01
+	private SearchCriteria cri; // ver02
 
 	// 1) 필요한 값 set
-	public void setCri(Criteria cri) {
+//	public void setCri(Criteria cri) { // ver01
+	public void setCri(SearchCriteria cri) { // ver02
 		this.cri = cri;
 	}
 
@@ -83,7 +85,8 @@ public class PageMaker {
 		return lastPageNo;
 	}
 
-	public Criteria getCri() {
+//	public Criteria getCri() { // ver01
+	public SearchCriteria getCri() { // ver02
 		return cri;
 	}
 	
@@ -93,8 +96,10 @@ public class PageMaker {
 	// => UriComponents , UriComponentsBuilder
 	// Uri를 동적으로 생성해주는 클래스,
 	// 파라미터가 조합된 uri를 손쉽게 만들어줌
-	// => ?currPage=8&perPageRow=10 이것을 만들어줌
+	// => ?currPage=8&rowPerPage=10 이것을 만들어줌
 	// ? 부터 만들어지므로 jsp Code에서 ? 포함하지 않도록 주의
+	
+	// ** ver01
 	public String makeQuery(int currPage) {
 		UriComponents uriComponents =
 				UriComponentsBuilder.newInstance().
@@ -103,6 +108,20 @@ public class PageMaker {
 				build();
 		return uriComponents.toString();
 	} //makeQuery
+	
+	// ** ver02
+	// => uri에 search 기능 추가
+	// => ?currPage=7&rowPerPage=10&searchType=tc&keyword=java
+	public String searchQuery(int currPage) {
+		UriComponents uriComponents =
+				UriComponentsBuilder.newInstance().
+				queryParam("currPage", currPage).		// ?currPage=5
+				queryParam("rowPerPage", cri.getRowPerPage()).
+				queryParam("searchType", cri.getSearchType()).
+				queryParam("keyword", cri.getKeyword()).
+				build();
+		return uriComponents.toString();
+	} //searchQuery
 
 	@Override
 	public String toString() {

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import criTest.Criteria;
+import criTest.SearchCriteria;
 import util.MemberDAO;
 import vo.MemberVO;
 import vo.PageVO;
@@ -13,6 +15,23 @@ import vo.PageVO;
 public class MemberServiceImpl implements MemberService {
 	@Autowired
 	MemberDAO dao;
+	
+	// ** Search Criteria PageList
+	public int searchRowCount(SearchCriteria cri) {
+		return dao.searchRowCount(cri);
+	}
+	public List<MemberVO> searchMList(SearchCriteria cri) {
+		return dao.searchMList(cri);
+	}
+	
+	// ** Criteria PageList
+	public int totalRowCount() {
+		return dao.totalRowCount();
+	}
+	public List<MemberVO> criMList(Criteria cri) {
+		return dao.criMList(cri);
+	}
+	
 	
 	// ** Page MemberList
 	public PageVO<MemberVO> pageList(PageVO<MemberVO> pvo) {

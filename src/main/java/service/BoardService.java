@@ -3,14 +3,19 @@ package service;
 import java.util.List;
 
 import criTest.Criteria;
+import criTest.SearchCriteria;
 import vo.BoardVO;
 import vo.PageVO;
 
 public interface BoardService {
 	
+	// ** Search Criteria PageList
+	public int searchRowCount(SearchCriteria cri);
+	public List<BoardVO> searchBList(SearchCriteria cri);
+	
 	// ** Criteria PageList
 	public int totalRowCount();
-	public List<BoardVO> criList(Criteria cri);
+	public List<BoardVO> criBList(Criteria cri);
 	
 	// ** Page BoardList
 	public PageVO<BoardVO> pageList(PageVO<BoardVO> vo);

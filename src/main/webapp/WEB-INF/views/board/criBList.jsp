@@ -7,12 +7,58 @@
 <meta charset="UTF-8">
 <title>** Spring_BoardList Cri**</title>
 <link rel="stylesheet" type="text/css" href="resources/myLib/spring03Style.css">
+<script src="resources/myLib/jquery-3.2.1.min.js"></script>
+<script>
+	$(function(){
+		$('#searchType').change(function(){
+			if($(this).val() == 'n'){
+				$('#keyword').val('');
+			}
+		});
+
+		$('#searchBtn').on("click", function(){
+			self.location="cbpage"
+			      + "${pageMaker.makeQuery(1)}"
+			      + "&searchType="
+			      + $('#searchType').val()
+			      + "&keyword="
+			      + $('#keyword').val();
+		// => ?currPage=7&rowPerPage=10&searchType=tc&keyword=java
+		}); //click
+
+	}); //ready
+	
+	/*	비교 TEST :
+			self.location="cbpage"
+			+ "${pageMaker.searchQuery(1)}" */
+</script>
 </head>
 <body>
 <h2>** Spring MyBatis BoardList PagingCri **</h2>
 <c:if test="${message!=null}">
+<hr>
 => ${message}
 </c:if>
+<div id="searchBar">
+	<select name="searchType" id="searchType">
+		<option value="n" <c:out value="${pageMaker.cri.searchType==null ? 'selected' : ''}" />>
+		---</option>
+		<option value="t" <c:out value="${pageMaker.cri.searchType=='t' ? 'selected' : ''}" />>
+		Title</option>
+		<option value="c" <c:out value="${pageMaker.cri.searchType=='c' ? 'selected' : ''}" />>
+		Content</option>
+		<option value="w" <c:out value="${pageMaker.cri.searchType=='w' ? 'selected' : ''}" />>
+		Writer</option>
+		<option value="tc" <c:out value="${pageMaker.cri.searchType=='tc' ? 'selected' : ''}" />>
+		Title/Content</option>
+		<option value="cw" <c:out value="${pageMaker.cri.searchType=='cw' ? 'selected' : ''}" />>
+		Content/Writer</option>
+		<option value="tcw" <c:out value="${pageMaker.cri.searchType=='tcw' ? 'selected' : ''}" />>
+		Title/Content/Writer</option>
+	</select>
+	<input type="text" name="keyword" id="keyword" value="${pageMaker.cri.keyword}">
+	<button id="searchBtn">Search</button>
+</div>
 <hr>
 <table style="font-family:AppleSDGothicNeoM00; width:700px;">
 	<tr align="center" height="30" bgcolor="aqua">
@@ -42,10 +88,12 @@
 	 3) Next > , Last >> : enabled 여부
 -->
 	<div  align="center">
+		<!-- ** ver01 : pageMaker.makeQuery(?) -->
+		<!-- ** ver02 : pageMaker.searchQuery(?) -->
 	 	<!-- 1) First << , Prev < : enabled 여부 -->
 	 	<c:if test="${pageMaker.prev && pageMaker.sPageNo > 1}">
-	 		<a href="cbpage${pageMaker.makeQuery(1)}">First</a> &nbsp;
-	 		<a href="cbpage${pageMaker.makeQuery(pageMaker.sPageNo-1)}">Prev</a>&nbsp;&nbsp;
+	 		<a href="cbpage${pageMaker.searchQuery(1)}">First</a> &nbsp;
+	 		<a href="cbpage${pageMaker.searchQuery(pageMaker.sPageNo-1)}">Prev</a>&nbsp;&nbsp;
 	 	</c:if>
 		<!-- 2) sPage~ePage까지 displayPageNo 값 만큼 출력 -->
 		<c:forEach var="i" begin="${pageMaker.sPageNo}" end ="${pageMaker.ePageNo}">
@@ -53,7 +101,7 @@
 				<font size="5" color="Orange">${i}&nbsp;</font>
 			</c:if>
 			<c:if test="${i!=pageMaker.cri.currPage}">
-				<a href="cbpage${pageMaker.makeQuery(i)}">${i}</a>&nbsp;
+				<a href="cbpage${pageMaker.searchQuery(i)}">${i}</a>&nbsp;
 			</c:if>
 		</c:forEach>
 		<!-- 삼항식과 비교 
@@ -61,8 +109,8 @@
 		-->
 		<!-- 3) Next > , Last >> : enabled 여부 -->
 		<c:if test="${pageMaker.next && pageMaker.ePageNo > 0}">
-	 		&nbsp;&nbsp;<a href="cbpage${pageMaker.makeQuery(pageMaker.ePageNo+1)}">Next</a>
-	 		&nbsp;<a href="cbpage${pageMaker.makeQuery(pageMaker.lastPageNo)}">Last</a> 
+	 		&nbsp;&nbsp;<a href="cbpage${pageMaker.searchQuery(pageMaker.ePageNo+1)}">Next</a>
+	 		&nbsp;<a href="cbpage${pageMaker.searchQuery(pageMaker.lastPageNo)}">Last</a> 
 	 	</c:if>
 	</div>
 <hr>

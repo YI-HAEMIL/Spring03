@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import criTest.Criteria;
+import criTest.SearchCriteria;
 import util.BoardDAO;
 import vo.BoardVO;
 import vo.PageVO;
@@ -15,12 +16,20 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	BoardDAO dao;
 	
+	// ** Search Criteria PageList
+	public int searchRowCount(SearchCriteria cri) {
+		return dao.searchRowCount(cri);
+	}
+	public List<BoardVO> searchBList(SearchCriteria cri){
+		return dao.searchBList(cri);
+	}
+	
 	// ** Criteria PageList
 	public int totalRowCount() {
 		return dao.totalRowCount();
 	}
-	public List<BoardVO> criList(Criteria cri) {
-		return dao.criList(cri);
+	public List<BoardVO> criBList(Criteria cri) {
+		return dao.criBList(cri);
 	}
 	
 	// ** Page BoardList

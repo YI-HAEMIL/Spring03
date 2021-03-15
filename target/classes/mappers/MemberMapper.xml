@@ -3,6 +3,54 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ncs.MemberMapper">
+	
+	<!-- SearchCriteria PageList -->
+	<sql id = "search">
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="searchType=='i'.toString()">
+				and ID LIKE #{keyVal} )
+			</when>
+			<when test="searchType=='m'.toString()">
+				and NAME LIKE #{keyVal} )
+			</when>
+			<when test="searchType=='r'.toString()">
+				and RID LIKE #{keyVal} )
+			</when>
+			<when test="searchType=='b'.toString()">
+				and BIRTHDAY LIKE #{keyVal} )
+			</when>
+			<when test="searchType=='im'.toString()">
+				and ID	 LIKE #{keyVal}
+				or	NAME LIKE #{keyVal} )
+			</when>
+			<when test="searchType=='imr'.toString()">
+				and ID	 LIKE #{keyVal}
+				or	NAME LIKE #{keyVal}
+				or	RID	 LIKE #{keyVal} )
+			</when>
+			<otherwise>)</otherwise>
+		</choose>
+	</sql>
+
+	<select id="searchRowCount" resultType="int">
+	<![CDATA[
+		select count(*) from membertest where ( id > ' ' ]]>
+		<!-- 조건 id :  search -->
+		<include refid="search"></include>
+	</select>
+	<select id="searchMList" resultType="vo.MemberVO">
+		<![CDATA[
+		select id,password,name,lev,birthd,point,weight,rid,uploadfile,rnum from 
+		(select m.* , ROW_NUMBER() OVER(order by id desc) rnum from membertest m 
+		where id > ' ' ]]> 
+		<include refid="search"></include> 
+		where rnum between #{sno} and #{eno}
+	</select>
+	
+
 
 	<!-- PageList -->
 	<select id="totalRowCount" resultType="int">

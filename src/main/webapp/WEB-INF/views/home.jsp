@@ -57,8 +57,8 @@
 <a href="mpage">mPage</a>&nbsp;
 <a href="bpage">bPage</a>&nbsp;
 <br>
-<a href="cmpage">criMPage</a>&nbsp;
-<a href="cbpage">criBPage</a>&nbsp;
+<a href="cmpage">cri_seMPage</a>&nbsp;
+<a href="cbpage">cri_seBPage</a>&nbsp;
 <br>
 <div id="resultArea">
 </div>
