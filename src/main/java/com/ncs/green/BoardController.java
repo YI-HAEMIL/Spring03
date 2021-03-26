@@ -13,10 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import criTest.PageMaker;
 import criTest.SearchCriteria;
+import lombok.extern.log4j.Log4j;
 import service.BoardService;
 import vo.BoardVO;
 import vo.PageVO;
 
+@Log4j
 @Controller
 public class BoardController {
 	@Autowired
@@ -25,6 +27,15 @@ public class BoardController {
 // ** Criteria PageList ver01 _ ver02
 	@RequestMapping(value="/cbpage")
 	public ModelAndView cbpage(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		
+		// *** @Log4j Test
+		log.error("** @Log4j Test error **");
+		log.warn("** @Log4j Test warn **");
+		log.info("** @Log4j Test info **");
+		log.debug("** @Log4j Test debug **");
+		log.trace("** @Log4j Test trace **");
+		
+		
 		// SearchType이 '---'  면 keyword 클리어 => jsp에서 jQuery로 하는 게 더 좋은 방법
 		// if("n".equals(cri.getSearchType())) cri.setKeyword("");
 		

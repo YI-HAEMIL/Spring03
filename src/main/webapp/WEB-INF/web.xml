@@ -44,5 +44,17 @@
 		<filter-name>characterEncoding</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
+	
+	<!-- Exception Test
+		 => 스프링의 "exceptionResolver" 설정을 하면 우선 적용되므로
+		 	500은 전달되지 않음, 404는 전달됨
+	-->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/views/errorPage/404Page.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/views/errorPage/exceptionMessage.jsp</location>
+	</error-page>
 </web-app>

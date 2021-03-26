@@ -406,7 +406,42 @@ public class MemberController {
 		vo.setUploadfile(file2);
 		// *******************************************
 		System.out.println("vo.getId() => " + vo.getId());
-		if (service.insert(vo) > 0) {
+		
+		// ** Transaction Test
+		
+	    /*   1. dependency 확인
+		      <!-- AspectJ -->
+		      <dependency>
+		         <groupId>org.aspectj</groupId>
+		         <artifactId>aspectjrt</artifactId>
+		         <version>${org.aspectj-version}</version>
+		      </dependency>
+		      <!-- AspectJ Weaver -->
+		      <dependency>
+		         <groupId>org.aspectj</groupId>
+		         <artifactId>aspectjweaver</artifactId>
+		         <version>${org.aspectj-version}</version>
+		      </dependency>
+	      
+	         2. servlet-context.xml AOP 설정
+	         
+	         3. Rollback Test
+	         3.1) Aop xml 적용 전 => insert1 은 입력되고, insert2 에서  500 오류 발생
+	         3.2) Aop xml 적용 후 => insert2 에서 오류발생시 모두 Rollback 되어 insert1, insert2 모두 입력 안됨
+	    */ 
+		// 3. Test
+		// 3.1) Transaction 적용 전 : 동일 자료 2번 insert
+		//	  => 첫번째는 입력완료 되고, 두번째 자료 입력 시 key 중복 오류 발생
+		// 3.2) Transaction 적용 후 : 동일 자료 2번 insert
+		//	  => 첫번째는 입력완료 되고, 두번째 자료 입력 시 key 붕복 오류 발생 하지만, 
+		//		 rollback 되어 둘 다 입력 안됨
+		
+		// ** Exception Test: DuplicateKeyException
+		// cnt=service.insert(vo);
+		
+		int cnt = service.insert(vo);
+		
+		if (cnt > 0) {
 			// 가입성공 -> 로그인 유도 메시지 출력 : loginForm.jsp
 			mv.addObject("message", " 회원 가입 성공 !!! 로그인 후 이용하세요 ~~");
 			mv.setViewName("member/loginForm");

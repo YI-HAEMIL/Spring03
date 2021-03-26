@@ -59,6 +59,7 @@
 <br>
 <a href="cmpage">cri_seMPage</a>&nbsp;
 <a href="cbpage">cri_seBPage</a>&nbsp;
+<a href="etest">Exception</a>
 <br>
 <div id="resultArea">
 </div>
