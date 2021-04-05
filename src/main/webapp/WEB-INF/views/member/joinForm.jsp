@@ -157,8 +157,10 @@
 			</tr>
 			<tr height="40">
 				<td bgcolor="pink">Image</td>
-				<td><img src="" class="select_img" /><br> <input
-					type="file" name="uploadfilef" id="uploadfilef"> <script>
+				<td><img src="" class="select_img" /><br>
+				<input type="file" name="uploadfilef" id="uploadfilef">
+					
+					<script>
 						// 해당 파일의 서버상의 경로를 src로 지정하는것으로는 클라이언트 영역에서 이미지는 표시될 수 없기 때문에
 						// 이를 해결하기 위해 FileReader이라는 Web API 를 사용
 						// => 이 를 통해 url data를 얻을 수 있음.
@@ -172,25 +174,23 @@
 						// => e.target : 이벤트를 유발시킨 DOM 객체
 
 						$('#uploadfilef').change(
-								function() {
-									if (this.files && this.files[0]) {
-										var reader = new FileReader;
-										reader.onload = function(e) {
-											$(".select_img").attr("src",
-													e.target.result).width(70)
-													.height(70);
-										} // onload_function
-										reader.readAsDataURL(this.files[0]);
-									} // if
-								}); // change
+							function() {
+								if (this.files && this.files[0]) {
+									var reader = new FileReader;
+									reader.onload = function(e) {
+										$(".select_img").attr("src", e.target.result).width(70).height(70);
+									} // onload_function
+									reader.readAsDataURL(this.files[0]);
+								} // if
+						}); // change
 					</script></td>
 			</tr>
 			<tr height="40">
 				<td></td>
 				<td>
-					<!-- <input type="submit" value="전송" disabled >&nbsp;&nbsp; --> <input
-					type="submit" id="submit" value="전송" disabled
-					onclick="return inCheck()"> <input type="reset" value="취소">&nbsp;&nbsp;
+					<!-- <input type="submit" value="전송" disabled >&nbsp;&nbsp; -->
+					<input type="submit" id="submit" value="전송" disabled onclick="return inCheck()">
+					<input type="reset" value="취소">&nbsp;&nbsp;
 					<span id="ajoin" class="textLink">AxJoin</span>
 				</td>
 			</tr>

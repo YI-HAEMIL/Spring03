@@ -8,4 +8,14 @@
 	<bean class="javaTest.MemberDAO" lazy-init="true"/>
 	<bean class="vo.MemberVO" lazy-init="true"/> 	-->
 	
+	<!-- 스프링시큐리티 라이브러리 BcryptPasswordEncoder -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<!-- JDBC Connection  -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:orcl" />
+		<property name="username" value="test" />
+		<property name="password" value="1234" />
+	</bean>  
 </beans>

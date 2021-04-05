@@ -187,6 +187,42 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
+		
+		<!--스프링시큐리티 web 라이브러리 (설치된 스프링 버전과 일치해야 함.)-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>4.2.4.RELEASE</version>
+		</dependency>
+				
+		<!--스프링시큐리티 core 라이브러리-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>4.2.4.RELEASE</version>
+		</dependency>
+		
+		<!--스프링시큐리티 config 라이브러리-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>4.2.4.RELEASE</version>
+		</dependency>
+				
+		<!-- 시큐리티 태그를 사용하기 위한 taglibs 라이브러리 -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>4.2.4.RELEASE</version>
+		</dependency>
+		
+		<!-- 시큐리티 테스트 -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<version>4.2.4.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	
     <build>

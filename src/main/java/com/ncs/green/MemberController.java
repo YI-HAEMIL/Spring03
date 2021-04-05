@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,10 @@ import vo.PageVO;
 public class MemberController {
 	@Autowired
 	MemberService service;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	// PasswordEncoder (interface) -> BcryptPasswordEncoder
 	
 // ** Criteria PageList ver01_ver02
 	@RequestMapping(value="/cmpage")
@@ -257,9 +262,18 @@ public class MemberController {
 		String password = vo.getPassword();
 		vo = service.selectOne(vo);
 		if (vo != null) { // ID Ok
-			if (vo.getPassword().equals(password)) {
+			
+			// if (vo.getPassword().equals(password)) {
+		
+			// passwordEncoder 적용
+			// passwordEncoder.matches(입력값, DB에 보관된 값)
+			if(passwordEncoder.matches(password, vo.getPassword())) {
+			
 				// Login 성공 -> session 보관, home
 				request.getSession().setAttribute("loginID", vo.getId());
+				// PasswordEncoding 이후 password 수정시 사용하기 위해 보관
+				// => detail에서 UpdateForm 출력시 사용
+				request.getSession().setAttribute("loginPW", password);
 				mv.setViewName("redirect:home");
 			} else {
 				// Password 오류
@@ -328,6 +342,7 @@ public class MemberController {
 		if (vo != null) {
 			mv.addObject("Apple", vo);
 			if ("U".equals(request.getParameter("jcode"))) {
+				vo.setPassword((String)request.getSession().getAttribute("loginPW"));
 				mv.setViewName("member/updateForm");
 			} else {
 				mv.setViewName("member/memberDetail");
@@ -439,6 +454,9 @@ public class MemberController {
 		// ** Exception Test: DuplicateKeyException
 		// cnt=service.insert(vo);
 		
+		// ** PasswordEncoder 적용
+		vo.setPassword(passwordEncoder.encode(vo.getPassword()));
+		
 		int cnt = service.insert(vo);
 		
 		if (cnt > 0) {
@@ -483,8 +501,13 @@ public class MemberController {
 			vo.setUploadfile(file2);
 		}
 		// *******************************************
-
+		
 		String message = null;
+		
+		// ** PasswordEncoder 적용
+		// 다이제스트 생성 & vo 에 set
+		vo.setPassword(passwordEncoder.encode(vo.getPassword()));
+		
 		if (service.update(vo) > 0) {
 			// 수정성공 -> message, List출력 (memberList.jsp)
 			// url 로 전달되는 한글 message 처리 위한 encoding

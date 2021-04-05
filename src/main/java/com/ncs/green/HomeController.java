@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -228,8 +230,66 @@ public class HomeController {
 		System.out.println("** defaultErrorView Test: "+city[3]);
 		// java.lang.ArrayIndexOutOfBoundsException : xml 에 정의하지 않음
 		
-		mv.setViewName("home");
+		mv.setViewName("redirect:home");
 		return mv;
 	}
+	
+	
+// ** *** PasswordEncoder BCrypt Test
+	@RequestMapping(value="/bcrypt")
+	public ModelAndView bcrypt(ModelAndView mv) {
+		
+		String password="1234!";
+		
+		//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+		//import org.springframework.security.crypto.password.PasswordEncoder;
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		
+		String digest1 = passwordEncoder.encode(password);
+		String digest2 = passwordEncoder.encode(password);
+		String digest3 = passwordEncoder.encode(password);
+
+		System.out.println("digest1=> " + digest1);
+		System.out.println("digest2=> " + digest2);
+		System.out.println("digest3=> " + digest3);
+		System.out.println(passwordEncoder.matches(password, digest1));
+		System.out.println(passwordEncoder.matches(password, digest2));
+		System.out.println(passwordEncoder.matches(password, digest3));
+		
+		mv.setViewName("redirect:home");
+		return mv;
+	}
+	
+// *** Spring Security Access_denied-handler
+   @RequestMapping(value = "/accessError")
+   public ModelAndView accessError(ModelAndView mv) {
+	      mv.setViewName("errorPage/exception_403");
+	      return mv;
+   }
+   
+// ** Custom LoginForm 
+// view 를 지정하지 않은경우 요청명.jsp 를 찾는다
+// 단, 폴더 위치를 지정하려면 요청명도 동일한 규칙으로 할 수 있다.
+// 아래의 경우에는  /view/ssLoginf.jsp 를 찾게됨.
+// => "message" 사용하지 않는경우 return 값은 void 도 가능함.
+   @RequestMapping(value = "/ssLoginf")
+   public ModelAndView ssLoginfTest(ModelAndView mv) {
+      mv.addObject("message", "** Spring security Login Test **") ;
+      return mv;
+   }
+   
+// ** Admin Form 
+   @RequestMapping(value = "/adminf")
+   public ModelAndView adminf(ModelAndView mv) {
+      mv.setViewName("securityJsp/admin");
+      return mv;
+   }
+   
+// ** Logout 
+   @RequestMapping(value = "/ssLogoutf")
+   public ModelAndView ssLogoutf(ModelAndView mv) {
+      mv.setViewName("securityJsp/ssLogoutForm");
+      return mv;
+   }
 	
 } //class

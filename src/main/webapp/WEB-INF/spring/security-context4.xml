@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:s="http://www.springframework.org/schema/security"
+   xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+      http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+   <!-- Root Context: defines shared resources visible to all other web components -->
+   
+   	<bean id="LoginSuccess" class="securityTest.LoginSuccessHandler" lazy-init="true"/>
+   	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+   	<!-- *** 스프링 시큐리티 적용 4. 
+	      ** JDBC적용 2 : 기존 테이블 (member) 이용하기
+	      ** 1) 준비
+	      => member 인증 Table 생성
+	      => BCryptPasswordEncoder 설정 
+	-->
+	
+	<s:http use-expressions="true" auto-config="true">
+		<s:intercept-url pattern="/a*"
+						 access="hasAuthority('ROLE_ADMIN')" />
+		<s:intercept-url pattern="/b*"
+						 access="hasRole('ROLE_USER')" />
+		<s:intercept-url pattern="/mp*"
+						 access="isAuthenticated()" />
+		<s:intercept-url pattern="/**"
+						 access="permitAll" />
+		<s:access-denied-handler error-page="/accessError"/>
+		<!-- Test3. custom 로그인창 사용
+			 Test4. 로그인 성공 시 처리
+			 		=> 클래스 작성, bean 등록, 연결 -->
+		<s:form-login login-page="/ssLoginf"
+						authentication-success-handler-ref="LoginSuccess" />
+		<!-- Test5. 로그아웃
+			 => 로그아웃을 담당할 요청명 등록
+			 => 로그아웃 요청이 들어오면 로그아웃 속성 처리 -->
+		<s:logout logout-url="/ssLogout"
+				  invalidate-session="true"
+				  delete-cookies="JSESSIONID" />
+	</s:http>
+	
+	<!--** 2) 인증/권한 설정
+      * Provider
+      => 인증이나 권한 정보를 제공하는 존재
+      => <s:jdbc-user-service Tag 로 "dataSource" 속성 등록
+         변경사항에 대한 쿼리문 속성 등록
+     -->
+	<s:authentication-manager>
+		<s:authentication-provider>
+			<s:jdbc-user-service 
+				data-source-ref="dataSource"
+				users-by-username-query="select id, password, enabled
+				 	from membertest where id=?"
+				authorities-by-username-query="select id, authority
+				 	from member_auth where id=?"
+			/>
+			<s:password-encoder ref="bcryptPasswordEncoder"/>
+		</s:authentication-provider>
+	</s:authentication-manager>
+   
+</beans>

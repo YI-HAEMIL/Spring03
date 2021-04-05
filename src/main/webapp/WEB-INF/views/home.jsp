@@ -59,7 +59,9 @@
 <br>
 <a href="cmpage">cri_seMPage</a>&nbsp;
 <a href="cbpage">cri_seBPage</a>&nbsp;
-<a href="etest">Exception</a>
+<a href="etest">Exception</a>&nbsp;<br>
+<a href="bcrypt">BCrypt</a>&nbsp;
+<a href="ssLoginf">ssLogin</a>&nbsp;
 <br>
 <div id="resultArea">
 </div>

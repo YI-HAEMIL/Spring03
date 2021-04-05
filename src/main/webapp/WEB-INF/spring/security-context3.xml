@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:s="http://www.springframework.org/schema/security"
+   xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+      http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+   <!-- Root Context: defines shared resources visible to all other web components -->
+   
+   <!-- 
+      ** form-login
+      => 인증된 사용자만 허용되는 자원경로에 접근할때 로그인폼을 보여준다.
+         로그인폼에서 id 와 password 를 전송하면, 로그인 인증 처리를 한다.
+         
+      ** form-logout      
+      => 로그아웃 처리
+   -->
+   	
+   	<bean id="LoginSuccess" class="securityTest.LoginSuccessHandler" lazy-init="true"/>
+	
+	<s:http use-expressions="true" auto-config="true">
+		<s:intercept-url pattern="/a*"
+						 access="hasAuthority('ROLE_ADMIN')" />
+		<s:intercept-url pattern="/b*"
+						 access="hasRole('ROLE_USER')" />
+		<s:intercept-url pattern="/mp*"
+						 access="isAuthenticated()" />
+		<s:intercept-url pattern="/**"
+						 access="permitAll" />
+		<s:access-denied-handler error-page="/accessError"/>
+		<!-- Test3. custom 로그인창 사용
+			 Test4. 로그인 성공 시 처리
+			 		=> 클래스 작성, bean 등록, 연결 -->
+		<s:form-login login-page="/ssLoginf"
+						authentication-success-handler-ref="LoginSuccess" />
+		<!-- Test5. 로그아웃
+			 => 로그아웃을 담당할 요청명 등록
+			 => 로그아웃 요청이 들어오면 로그아웃 속성 처리 -->
+		<s:logout logout-url="/ssLogout"
+				  invalidate-session="true"
+				  delete-cookies="JSESSIONID" />
+	</s:http>
+	
+	<!--** 2) 인증/권한 설정
+      * Authentication-Manager
+      => 인증과 권한 처리
+      
+      * Provider
+      => 인증이나 권한 정보를 제공하는 존재
+      => 이를 위해 <s:user-service.. Tag 대신 
+         -> UserDetailsService (i) 구현클래스 사용
+         -> <s:jdbc-user-service Tag 로 "dataSource" 등록
+            ( 설정전에 "dataSource" 를 root~~.xml 에 빈등록 해야함 )
+     -->
+	<s:authentication-manager>
+		<s:authentication-provider>
+			<s:jdbc-user-service data-source-ref="dataSource"/>
+		</s:authentication-provider>
+	</s:authentication-manager>
+   
+</beans>
